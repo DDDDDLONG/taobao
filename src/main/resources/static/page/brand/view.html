@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <meta charset="UTF-8">
+    <title>用户查询</title>
+    <link rel="stylesheet" href="../../js/jconfirm/jquery-confirm.min.css">
+
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/materialdesignicons.min.css" rel="stylesheet">
+    <!--标签插件-->
+    <link rel="stylesheet" href="../../js/jquery-tags-input/jquery.tagsinput.min.css">
+    <link href="../../css/style.min.css" rel="stylesheet">
+
+    <link rel="icon" href="../../favicon.ico" type="image/ico">
+<!--编辑模态框-->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="edit-modal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">编辑用户</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                        <label>用户名</label>
+                        <input type="text" class="form-control" id="edit_username" placeholder="请输入用户名" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>密码</label>
+                        <input type="password" class="form-control" id="edit_password" placeholder="请输入密码" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>真实姓名</label>
+                        <input type="text" class="form-control" id="edit_realname" placeholder="请输入真实姓名" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>性别</label>
+                        <div class="clearfix">
+                            <label class="lyear-radio radio-inline radio-primary">
+                                <input type="radio" name="edit_sex" value="男" id="edit_male"><span>男</span>
+                            </label>
+                            <label class="lyear-radio radio-inline radio-primary">
+                                <input type="radio" name="edit_sex" value="女" id="edit_female" checked><span>女</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>邮箱</label>
+                        <input type="text" class="form-control" id="edit_email" placeholder="请输入邮箱" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>手机号码</label>
+                        <input type="text" class="form-control" id="edit_mobile" placeholder="请输入手机号码" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>身份证号码</label>
+                        <input type="text" class="form-control" id="edit_id_code" placeholder="请输入身份证号码" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="edit-sure">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--  查看模态框  -->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="view-modal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">详细信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                        <label>用户名</label>
+                        <input type="text" class="form-control" id="view_username" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>密码</label>
+                        <input type="text" class="form-control" id="view_password" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>真实姓名</label>
+                        <input type="text" class="form-control" id="view_realname" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>性别</label>
+                        <input type="text" class="form-control" id="view_sex"  readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>邮箱</label>
+                        <input type="text" class="form-control" id="view_email" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>手机号码</label>
+                        <input type="text" class="form-control" id="view_mobile" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>身份证号码</label>
+                        <input type="text" class="form-control" id="view_id_code" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>创建日期</label>
+                        <input type="text" class="form-control" id="view_gmt_create" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>修改日期</label>
+                        <input type="text" class="form-control" id="view_gmt_modified" readonly />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</head>
+<body>
+<main class="lyear-layout-content">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-toolbar clearfix">
+                        <form class="form-inline">
+                            <div>
+                                <div class="form-group">
+                                    <label for="findname">品牌名</label>
+                                    <input type="text" class="form-control" id="findname" placeholder="支持模糊查询">
+                                </div>
+                                <button type="button" class="btn btn-primary" id="find-btn">查询</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>品牌名</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="pagination">
+                            <li><button id="last-btn" class="btn btn-primary">上一页</button></li>
+                            <li><button href="#!" id="next-btn" class="btn btn-primary">下一页</button></li>
+                            <li>
+                                当前页数：<i id="current"></i>/<i id="totalCount"></i>
+                                一共<i id="totalPage"></i>页
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+</body>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+
+<!--消息提示-->
+<script type="text/javascript" src="../../js/lightyear.js"></script>
+<script src="../../js/bootstrap-notify.min.js"></script>
+
+<script src="../../js/jconfirm/jquery-confirm.min.js"></script>
+<script>
+    /* 声明分页, 条件查询基础变量 */
+    let current,size,totalPage,totalCount,name,id,isDelete ;
+    /* 声明分页,条件查询元素对象 */
+    let $tbody,$lastBtn,$nextBtn,$findBtn;
+    /* 声明修改数据的元素对象*/
+    let $editUsername,$editPassword,$editRealname,$editEmail,$editMobile,$editIdCode,$editMale,$editFemale,$editSure;
+    /* 声明查看详细信息的元素对象*/
+    let $viewUsername,$viewPassword,$viewRealname,$viewEmail,$viewMobile,$viewIdCode,$viewSex,$viewGmtCreate,$viewGmtModified;
+
+    function loadPageData(){
+        username = $findname.val();
+        let data = {
+            username:username,
+            sex:sex == -1 ?null:$sexSelect.val(),
+            isDelete:isDelete == -1?null:$isDelete.val(),
+            current:current,
+            size:size
+        };
+        $.getJSON("/api/user/list",data,function (data) {
+            if (data.code == "00000"){
+                let page = data.data;
+                totalPage = page.pages;
+                totalCount = page.total;
+                let list = page.records;
+                let tbodyHtml = "";
+                for (let i = 0; i < list.length; i++) {
+                    let item = list[i];
+                    let tr = `<tr>
+                                    <td>${item.id}</td>
+                                    <td>${item.username}</td>
+                                    <td>${item.password}</td>
+                                    <td>${item.realname}</td>
+                                    <td>${item.sex}</td>
+                                    <td>${item.mobile}</td>
+                                    <td>${item.email}</td>
+                                    <td>${item.idCode}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-xs btn-default" href="javascript:void(0)" onclick="edit(${item.id})" title="编辑" data-toggle="modal" data-target="#edit-modal"><i class="mdi mdi-pencil" id="update"></i></a>
+                                            <a class="btn btn-xs btn-default" href="javascript:void(0)" onclick="view(${item.id})" title="查看" data-toggle="modal" data-target="#view-modal"><i class="mdi mdi-eye" id="select"></i></a>
+                                            <a class="btn btn-xs btn-default" href="javascript:void(0)" onclick="del(${item.id})" title="删除" data-toggle="tooltip"><i class="mdi mdi-window-close" id="delete"></i></a>
+                                        </div>
+                                    </td>
+                                  </tr>`
+                    tbodyHtml += tr;
+                }
+                $tbody.html(tbodyHtml);
+                $("#totalPage").text(totalPage);
+                $("#current").text(current);
+                $("#totalCount").text(totalCount);
+            }else {
+                lightyear.notify(data.msg,'danger',2000);
+            }
+        });
+    }
+
+    function edit(id) {
+        $.getJSON("/api/user/view/" + id,function (data) {
+            if(data.code == "00000"){
+                let user = data.data;
+                $editUsername.val(user.username);
+                $editPassword.val(user.password);
+                $editRealname.val(user.realname);
+                $editEmail.val(user.email);
+                $editMobile.val(user.mobile);
+                $editIdCode.val(user.idCode);
+                if(user.sex == "男"){
+                    $editMale.prop("checked",true)
+                }else if(user.sex == "女"){
+                    $editFemale.prop("checked",true)
+                }
+                $editSure.click(function () {
+                    $.confirm({
+                        title: '警告',
+                        content: '确定修改吗?',
+                        type: 'orange',
+                        typeAnimated: false,
+                        buttons: {
+                            omg: {
+                                text: '确定',
+                                btnClass: 'btn-orange',
+                                action:function () {
+                                    let data = {
+                                        id:id,
+                                        username:$editUsername.val(),
+                                        password:$editPassword.val(),
+                                        realname: $editRealname.val(),
+                                        email:$editEmail.val(),
+                                        mobile:$editMobile.val(),
+                                        idCode:$editIdCode.val()
+                                    }
+                                    $.post("/api/user/update",data,function (data) {
+                                        if(data.code == "00000"){
+                                            lightyear.notify("修改成功!", 'success', 2000);
+                                            $("#edit-modal").modal('hide');
+                                            loadPageData();
+                                        }else {
+                                            lightyear.notify(data.msg, 'danger', 2000);
+                                        }
+                                    })
+                                }
+                            },
+                            close: {
+                                text: '关闭'
+                            }
+                        }
+                    });
+                })
+            }else {
+                lightyear.notify(data.msg, 'danger', 3000);
+            }
+        })
+    }
+
+    function view(id) {
+        $.getJSON("/api/user/view/" + id,function (data) {
+            if(data.code == "00000"){
+                let user = data.data;
+                $viewUsername.val(user.username);
+                $viewPassword.val(user.password);
+                $viewRealname.val(user.realname);
+                $viewEmail.val(user.email);
+                $viewMobile.val(user.mobile);
+                $viewIdCode.val(user.idCode);
+                $viewSex.val(user.sex);
+                $viewGmtCreate.val(user.gmtCreate);
+                $viewGmtModified.val(user.gmtModified);
+            }else {
+                lightyear.notify(data.msg, 'danger', 2000);
+            }
+
+        })
+    }
+
+    function del(id) {
+        $.confirm({
+            title: '警告',
+            content: '确认删除',
+            type:'red',
+            typeAnimated:false,
+            buttons: {
+                confirm: {
+                    text: '确认',
+                    action: function(){
+                        let data = {
+                            id:id,
+                            isDelete:1
+                        }
+                        $.post("/api/user/update",data,function (data) {
+                            if (data.code == "00000") {
+                                lightyear.notify("删除成功!", 'success', 3000);
+                                loadPageData();
+                            } else {
+                                lightyear.notify(data.msg, 'danger', 3000);
+                            }
+                        });
+                    }
+                },
+                cancel: {
+                    text: '关闭',
+                }
+            }
+        });
+
+    }
+
+    $(function () {
+        current = 1;
+        size = 10;
+        totalPage = 0;
+        totalCount = 0;
+        sex = -1;
+        isDelete = -1;
+        username = '';
+
+        $tbody = $("#tbody");
+        $lastBtn = $("#last-btn");
+        $nextBtn = $("#next-btn");
+        $findBtn = $("#find-btn");
+        $findname = $("#findname");
+        $sexSelect = $("#sex-select");
+        $isDelete = $("#is-delete-select");
+
+        $editUsername = $("#edit_username");
+        $editPassword = $("#edit_password");
+        $editRealname = $("#edit_realname");
+        $editEmail = $("#edit_email");
+        $editMobile = $("#edit_mobile");
+        $editIdCode = $("#edit_id_code");
+        $editMale = $("#edit_male");
+        $editFemale= $("#edit_female");
+        $editSure = $("#edit-sure");
+
+        $viewUsername = $("#view_username");
+        $viewPassword = $("#view_password");
+        $viewRealname = $("#view_realname");
+        $viewEmail = $("#view_email");
+        $viewMobile = $("#view_mobile");
+        $viewIdCode = $("#view_id_code");
+        $viewSex = $("#view_sex");
+        $viewGmtCreate = $("#view_gmt_create");
+        $viewGmtModified = $("#view_gmt_modified");
+
+        $lastBtn.click(function () {
+            if (current != 1){
+                current--;
+            }else{
+                lightyear.notify('已经是首页了','danger',2000);
+                return;
+            }
+            loadPageData();
+        })
+
+        $nextBtn.click(function () {
+            if (current != totalPage){
+                current++;
+            }else {
+                lightyear.notify('已经是最后一页了','danger',2000);
+                return;
+            }
+            loadPageData();
+        })
+
+        $findBtn.click(function () {
+            username = $findname.val();
+            sex = $sexSelect.val();
+            isDelete = $isDelete.val();
+            loadPageData();
+        })
+
+        loadPageData();
+    })
+
+</script>
+
+</html>

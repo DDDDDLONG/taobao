@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <meta charset="UTF-8">
+    <title>用户收货地址查询</title>
+    <link rel="stylesheet" href="../../js/jconfirm/jquery-confirm.min.css">
+
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/materialdesignicons.min.css" rel="stylesheet">
+    <!--标签插件-->
+    <link rel="stylesheet" href="../../js/jquery-tags-input/jquery.tagsinput.min.css">
+    <link href="../../css/style.min.css" rel="stylesheet">
+
+    <link rel="icon" href="../../favicon.ico" type="image/ico">
+<!--编辑模态框-->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="edit-modal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">编辑地址</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                        <label>省份</label>
+                        <input type="text" class="form-control" id="edit_province" placeholder="请输入省份" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>城市</label>
+                        <input type="text" class="form-control" id="edit_city" placeholder="请输入城市" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>区/县</label>
+                        <input type="text" class="form-control" id="edit_district" placeholder="请输入区/县" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>详细信息</label>
+                        <input type="text" class="form-control" id="edit_detail" placeholder="请输入详细信息" />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>备注</label>
+                        <div class="clearfix">
+                            <label class="lyear-radio radio-inline radio-primary">
+                                <input type="radio" name="edit_remark" value="0" id="editHome"><span>家</span>
+                            </label>
+                            <label class="lyear-radio radio-inline radio-primary">
+                                <input type="radio" name="edit_remark" value="1" id="editSchool" checked><span>学校</span>
+                            </label>
+                            <label class="lyear-radio radio-inline radio-primary">
+                                <input type="radio" name="edit_remark" value="2" id="editCompanies" checked><span>公司</span>
+                            </label>
+                            <label class="lyear-radio radio-inline radio-primary">
+                                <input type="radio" name="edit_remark" value="3" id="editOther" checked><span>其他</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>默认</label>
+                        <div class="clearfix">
+                            <label class="lyear-radio radio-inline radio-primary">
+                                <input type="checkbox" name="edit_sex" value="1" id="editDefault"><span>默认</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="edit-sure">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--  查看模态框  -->
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="view-modal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">详细信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                        <label>用户id</label>
+                        <input type="text" class="form-control" id="view_userId" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>省份</label>
+                        <input type="text" class="form-control" id="view_province" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>城市</label>
+                        <input type="text" class="form-control" id="view_city" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>区/县</label>
+                        <input type="text" class="form-control" id="view_district"  readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>详细信息</label>
+                        <input type="text" class="form-control" id="view_detail" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>备注</label>
+                        <input type="text" class="form-control" id="view_remark" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>默认</label>
+                        <input type="text" class="form-control" id="view_is_default" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>创建日期</label>
+                        <input type="text" class="form-control" id="view_gmt_create" readonly />
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>修改日期</label>
+                        <input type="text" class="form-control" id="view_gmt_modified" readonly />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</head>
+<body>
+<main class="lyear-layout-content">
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-toolbar clearfix">
+                        <form class="form-inline">
+                            <div>
+                                <div class="form-group">
+                                    <label for="findname">用户名</label>
+                                    <input type="text" class="form-control" id="findname" placeholder="支持模糊查询">
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">性别</div>
+                                        <select class="form-control" id="sex-select">
+                                            <option value="-1" selected>全部</option>
+                                            <option value="男">男</option>
+                                            <option value="女">女</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">状态</div>
+                                        <select class="form-control" id="is-delete-select">
+                                            <option value="-1" selected>全部</option>
+                                            <option value="1">已删除</option>
+                                            <option value="0">未删除</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="find-btn">查询</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>用户id</th>
+                                    <th>省份</th>
+                                    <th>城市</th>
+                                    <th>区/县</th>
+                                    <th>详细地址</th>
+                                    <th>备注</th>
+                                    <th>默认</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="pagination">
+                            <li><button id="last-btn" class="btn btn-primary">上一页</button></li>
+                            <li><button href="#!" id="next-btn" class="btn btn-primary">下一页</button></li>
+                            <li>
+                                当前页数：<i id="current"></i>/<i id="totalCount"></i>
+                                一共<i id="totalPage"></i>页
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+</body>
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+
+<!--消息提示-->
+<script type="text/javascript" src="../../js/lightyear.js"></script>
+<script src="../../js/bootstrap-notify.min.js"></script>
+
+<script src="../../js/jconfirm/jquery-confirm.min.js"></script>
+<script>
+    /* 声明分页, 条件查询基础变量 */
+    let current,size,totalPage,totalCount,province,city,district,detail,remake,isDefault;
+    /* 声明分页,条件查询元素对象 */
+    let $tbody,$lastBtn,$nextBtn,$findBtn;
+    /* 声明修改数据的元素对象*/
+    let $editProvince,$editCity,$editDistrict,$editDetail,$editRemark,$editIsDefault,
+        $editHome,$editSchool,$editCompanies,$editOther,$editDefault,$editSure;
+    /* 声明查看详细信息的元素对象*/
+    let $viewProvince,$viewCity,$viewDistrict,$viewDetail,$viewRemark,$viewIsDefault,$viewGmtCreate,$viewGmtModified,$viewuserId;
+
+    function loadPageData(){
+        let data = {
+            current:current,
+            size:size
+        };
+        $.getJSON("/api/address/list",data,function (data) {
+            if (data.code == "00000"){
+                let page = data.data;
+                totalPage = page.pages;
+                totalCount = page.total;
+                let list = page.records;
+                let tbodyHtml = "";
+                for (let i = 0; i < list.length; i++) {
+                    let item = list[i];
+                    let tr = `<tr>
+                                    <td>${item.id}</td>
+                                    <td>${item.userId}</td>
+                                    <td>${item.province}</td>
+                                    <td>${item.city}</td>
+                                    <td>${item.district}</td>
+                                    <td>${item.detail}</td>
+                                    <td>${item.remark}</td>
+                                    <td>${item.isDefault}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-xs btn-default" href="javascript:void(0)" onclick="edit(${item.id})" title="编辑" data-toggle="modal" data-target="#edit-modal"><i class="mdi mdi-pencil" id="update"></i></a>
+                                            <a class="btn btn-xs btn-default" href="javascript:void(0)" onclick="view(${item.id})" title="查看" data-toggle="modal" data-target="#view-modal"><i class="mdi mdi-eye" id="select"></i></a>
+                                            <a class="btn btn-xs btn-default" href="javascript:void(0)" onclick="del(${item.id})" title="删除" data-toggle="tooltip"><i class="mdi mdi-window-close" id="delete"></i></a>
+                                        </div>
+                                    </td>
+                                  </tr>`
+                    tbodyHtml += tr;
+                }
+                $tbody.html(tbodyHtml);
+                $("#totalPage").text(totalPage);
+                $("#current").text(current);
+                $("#totalCount").text(totalCount);
+            }else {
+                lightyear.notify(data.msg,'danger',2000);
+            }
+        });
+    }
+
+    function edit(id) {
+        $.getJSON("/api/address/view/" + id,function (data) {
+            if(data.code == "00000"){
+                let address = data.data;
+                $editProvince.val(address.province);
+                $editCity.val(address.city);
+                $editDistrict.val(address.district);
+                $editDetail.val(address.detail);
+
+                if(address.remark == "0"){
+                    $editHome.prop("checked",true)
+                }else if(address.remark == "1"){
+                    $editSchool.prop("checked",true)
+                }else if (address.remark == "2"){
+                    $editCompanies.prop("checked",true)
+                }else if (address.remark == "3"){
+                    $editOther.prop("checked",true)
+                }
+                if (address.isDefault == "1"){
+                    $editDefault.prop("checked",true)
+                }
+
+                $editSure.click(function () {
+                    $.confirm({
+                        title: '警告',
+                        content: '确定修改吗?',
+                        type: 'orange',
+                        typeAnimated: false,
+                        buttons: {
+                            omg: {
+                                text: '确定',
+                                btnClass: 'btn-orange',
+                                action:function () {
+                                    let data = {
+                                        id:id,
+                                        province:$editProvince.val(),
+                                        city:$editCity.val(),
+                                        district: $editDistrict.val(),
+                                        detail:$editDetail.val()
+                                    }
+                                    $.post("/api/address/update",data,function (data) {
+                                        if(data.code == "00000"){
+                                            lightyear.notify("修改成功!", 'success', 2000);
+                                            $("#edit-modal").modal('hide');
+                                            loadPageData();
+                                        }else {
+                                            lightyear.notify(data.msg, 'danger', 2000);
+                                        }
+                                    })
+                                }
+                            },
+                            close: {
+                                text: '关闭'
+                            }
+                        }
+                    });
+                })
+            }else {
+                lightyear.notify(data.msg, 'danger', 3000);
+            }
+        })
+    }
+
+    function view(id) {
+        $.getJSON("/api/address/view/" + id,function (data) {
+            if(data.code == "00000"){
+                let address = data.data;
+                $viewProvince.val(address.province);
+                $viewCity.val(address.city);
+                $viewDistrict.val(address.district);
+                $viewDetail.val(address.detail);
+                $viewuserId.val(address.userId);
+                $viewIsDefault.val(address.isDefault);
+                $viewRemark.val(address.remark);
+                $viewGmtCreate.val(address.gmtCreate);
+                $viewGmtModified.val(address.gmtModified);
+            }else {
+                lightyear.notify(data.msg, 'danger', 2000);
+            }
+
+        })
+    }
+
+    function del(id) {
+        $.confirm({
+            title: '警告',
+            content: '确认删除',
+            type:'red',
+            typeAnimated:false,
+            buttons: {
+                confirm: {
+                    text: '确认',
+                    action: function(){
+                        let data = {
+                            id:id,
+                            isDelete:1
+                        }
+                        $.post("/api/address/update",data,function (data) {
+                            if (data.code == "00000") {
+                                lightyear.notify("删除成功!", 'success', 3000);
+                                loadPageData();
+                            } else {
+                                lightyear.notify(data.msg, 'danger', 3000);
+                            }
+                        });
+                    }
+                },
+                cancel: {
+                    text: '关闭',
+                }
+            }
+        });
+
+    }
+
+    $(function () {
+        current = 1;
+        size = 10;
+        totalPage = 0;
+        totalCount = 0;
+
+        $tbody = $("#tbody");
+        $lastBtn = $("#last-btn");
+        $nextBtn = $("#next-btn");
+        $findBtn = $("#find-btn");
+
+        $editProvince = $("#edit_province");
+        $editCity = $("#edit_city");
+        $editDistrict = $("#edit_district");
+        $editDetail = $("#edit_detail");
+
+        $editHome = $("#editHome");
+        $editSchool= $("#editSchool");
+        $editCompanies=$("#editCompanies");
+        $editOther = $("#editOther");
+        $editDefault = $("#editDefault");
+
+        $editSure = $("#edit-sure");
+
+        $viewProvince = $("#view_province");
+        $viewCity = $("#view_city");
+        $viewDetail = $("#view_detail");
+        $viewDistrict = $("#view_district");
+        $viewRemark = $("#view_remark");
+        $viewIsDefault = $("#view_is_default");
+        $viewGmtCreate = $("#view_gmt_create");
+        $viewGmtModified = $("#view_gmt_modified");
+        $viewuserId = $("#view_userId");
+
+        $lastBtn.click(function () {
+            if (current != 1){
+                current--;
+            }else{
+                lightyear.notify('已经是首页了','danger',2000);
+                return;
+            }
+            loadPageData();
+        })
+
+        $nextBtn.click(function () {
+            if (current != totalPage){
+                current++;
+            }else {
+                lightyear.notify('已经是最后一页了','danger',2000);
+                return;
+            }
+            loadPageData();
+        })
+
+        $findBtn.click(function () {
+            username = $findname.val();
+            sex = $sexSelect.val();
+            isDelete = $isDelete.val();
+            loadPageData();
+        })
+
+        loadPageData();
+    })
+
+</script>
+
+</html>
